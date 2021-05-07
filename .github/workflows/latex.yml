@@ -10,7 +10,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           working_directory: ./
-	  args: -pdf -file-line-error -silent -f -interaction=nonstopmode
+	  args: "-pdf -file-line-error -silent -f -interaction=nonstopmode"
           root_file: |
             slides.tex
       - name: Move compiled files to outputs folder
