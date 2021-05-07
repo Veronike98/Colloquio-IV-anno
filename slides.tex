@@ -1,0 +1,1050 @@
+\documentclass[]{beamer}
+% Locale
+\usepackage[british]{babel}
+\usepackage[english=british]{csquotes} % le paraentesi angolate non sono belle, meglio questo
+
+% LaTeX
+\usepackage{geometry}
+\usepackage{tikz}
+%\usetikzlibrary{quantikz}
+\usetikzlibrary{math,fadings} %disegni
+\usepackage{tikzpeople} %per fare i personaggini
+%\usepackage{callouts} %per i fumetti
+\usetikzlibrary{shapes}
+\usepackage{tcolorbox} % fare i box colorati
+\usepackage{xcolor} % definire colori
+\usepackage{tikzsymbols} %per mettere le emoji
+\usepackage{adjustbox} %per il disegno in background
+\usepackage{transparent}
+\usepackage{tikz-cd}
+
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{mathrsfs}
+\usepackage{centernot} % Serve per fare il not al centro delle frecce
+\usepackage{bm} % vettori bold
+\usepackage{mathtools} %per le graffe a destra
+
+% Physics
+\usepackage{braket}
+
+%per fare le parentesi sulla destra di una lista
+
+%Disegnini
+\usepackage{pgfplots}
+\usepackage{contour}
+\usetikzlibrary{calc,math,decorations.markings,decorations.text,backgrounds,fadings}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{decorations.pathreplacing,math,calc,tikzmark}
+
+%%% Graffe verticali per il testo
+\tikzset{My Node Style/.style={midway, right, xshift=3.0ex, align=left, font=\small, draw=none, thin, text=black}}
+
+\newcommand{\VerticalBrace}[4][]{%
+	% #1 = draw options
+	% #2 = top mark
+	% #2 = bottom mark
+	% #4 = label
+	\begin{tikzpicture}[overlay,remember picture]
+	\tikzmath{coordinate \p,\q;\p=(pic cs:#2);\q=(pic cs:#3);\maxx=max(\px,\qx);}
+	\draw[xshift=1ex,decorate,decoration={brace, amplitude=1.5ex}, #1] 
+	([yshift=1.5ex]{{pic cs:#2} -| \maxx pt,0})  -- ([yshift=-.5ex]{{pic cs:#3} -| \maxx pt,0})
+	node[My Node Style] {#4};
+	\end{tikzpicture}
+}
+
+% Bibliografia
+\usepackage[backend=bibtex,doi=false,isbn=false,url=false]{biblatex}
+\addbibresource{bibliografia.bib}
+
+% Colori
+\definecolor{bluunipi}{RGB}{25,62,131}
+\definecolor{tasselred}{RGB}{130,29,45}
+\definecolor{blond}{RGB}{251,231,161}
+\definecolor{skincolor}{RGB}{224,177,132}%{255,220,177}
+\definecolor{idea}{RGB}{254,231,2} 								%giallo ideee
+\definecolor{definition}{RGB}{0,113,145}%{0,0,204}%{51,153,255}%{62,222,217}%{0,204,204}%{29,211,247} %azzurro definizioni
+\definecolor{theorem}{RGB}{42,157,143}							 %verde teoremi
+\definecolor{titleorange}{RGB}{255,153,0} 					%arancio per i titoletti
+
+
+% Comandi per i teoremi, definizioni ed esmpi
+\theoremstyle{plain}
+\newtheorem{thm}{Teorema} % reset theorem numbering for each chapter
+\newtheorem{post}{Postulato} % reset theorem numbering for each chapter
+\newtheorem{lem}{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definizione} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}{Esempio} % same for example numbers
+\newtheorem*{ach}{Attenzione!}
+
+% Shortcut
+\newcommand{\SigmaX}{\hat{\sigma}^{(x)}}
+\newcommand{\SigmaY}{\hat{\sigma}^{(y)}}
+\newcommand{\SigmaZ}{\hat{\sigma}^{(z)}}
+
+\newcommand{\Hilb}{\mathcal{H}}
+\newcommand{\Id}{\hat{\mathcal{I}}}
+\newcommand{\LinSet}{\mathscr{L}}
+\newcommand{\ChoiState}[1]{\hat{\rho}_\text{CJ}^{#1}}
+
+\DeclareMathOperator{\Tr}{tr}
+
+%pacchetti per autisticare
+\usepackage{duckuments}
+\usepackage{halloweenmath}
+
+
+%box carini
+\newenvironment<>{ideablock}[1]{%
+	\setbeamercolor{block title}{fg=white,bg=idea}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{defblock}[1]{%
+	\setbeamercolor{block title}{fg=white,bg=definition}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{theoblock}[1]{%
+	\setbeamercolor{block title}{fg=white,bg=theorem}%
+	\begin{block}#2{#1}}{\end{block}}
+
+
+% due nuovi comandi per allineare le cose bene
+\newcommand\parallelcontent[2]{
+	\begin{columns}[t]
+		\column{0.5\textwidth} #1
+		\column{0.5\textwidth} #2
+	\end{columns}
+}
+\newcommand\parallelitem[2]{
+	\parallelcontent
+	{\begin{itemize} \item #1 \end{itemize}}
+	{\begin{itemize} \item #2 \end{itemize}}
+}
+
+
+\usepackage[utf8]{inputenc}
+
+\usetheme{Frankfurt}
+\setbeamercovered{transparent} %per rendere sbiadito cio' che verra'
+\setbeamertemplate{navigation symbols}{}
+
+\usecolortheme{wolverine} %wolverine, seahorse, crane, beaver
+
+
+%Information to be included in the title page:
+\title[Penrose's Singularity Theorem]
+{Penrose's Singularity Theorem}
+%\subtitle[it]{\texttt{Inserisci sottotitolo}}
+\author[Veronica Sacchi]{Veronica Sacchi \\[1ex]
+	{\small Advisor: Enrico Trincherini}}      
+\institute[SNS]{\includegraphics[height=1.45cm]{Immagini/logoSNS/orizzontale-colore/orizzontale-colore.jpg}}
+\date[30-04-2021]{30th April 2021}
+%\logo{\includegraphics[height=1.1cm]{Immagini/logoSNS/tondo-colore/tondo-colore.png}}
+
+\begin{document}	
+	
+	\usebackgroundtemplate{
+		\adjustbox{height=0.8\paperheight, raise=-9cm, right=15cm}{
+			\transparent{0.05}
+			\includegraphics{Immagini/logoSNS/solo_logo.jpeg}
+		}
+	}
+	
+	\begin{frame}
+	\titlepage
+	\end{frame}
+	
+	\section{Basic definitions}
+	\subsection{Globally Hyperbolic Spaces}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 2
+	\begin{frame}
+	\frametitle{First definitions}
+	\begin{defblock}{Spacelike hypesurface}
+		A hypersurface \(S\) is \emph{spacelike} if the induced metric has Euclidean signature. 
+	\end{defblock}
+	\begin{defblock}{Achronal hypesurface}
+		\(S\) is said to be \emph{achronal} if there is no \emph{timelike} path in \(M\) connecting \(2\) distinct points \(q,p \in S\).
+	\end{defblock}
+	\pause
+	
+	\begin{columns}[T]
+	\column{0.43\textwidth}
+	\begin{figure}
+		\begin{tikzpicture}
+			\coordinate (a) at (0,0);
+			\coordinate (b) at (1.4,0);
+			\coordinate (c) at (0,2.2);
+			\coordinate (d) at (1.4,2.2);
+			\coordinate (e) at (1.4, 0.8);
+			\coordinate (f) at (0, 1.6);
+			\coordinate (g) at (0.7, 1.9);
+			\coordinate (h) at (0.7, 0.20);
+			\draw (a)--(c);
+			\draw (b)--(d);
+			\draw[dashed] (0,0) arc (180:0:0.7 and 0.3);
+			\draw (0,0) arc (180:360:0.7 and 0.3);
+			%\draw[dashed] (0.7, 0) ellipse (0.7 and 0.3);
+			\draw (0.7, 2.2) ellipse (0.7 and 0.3);
+			\draw[titleorange] (a) to [out = 15, in = -115] (e);
+			\draw[dashed, titleorange] (e) to [out = 125, in = -20] (f);
+			\draw[titleorange] (f) to [out = 15, in = -145] (g);
+			\draw[thick, definition] (h) -- (g);
+			\foreach \i in {h,g} {\fill[definition] (\i) circle(.8pt);}
+			\node[below] at (h) {\footnotesize\(p\)};
+			\node[above] at (g) {\footnotesize\(q\)};
+			\node[left] at (f) {\footnotesize\(S\)};
+			
+		\end{tikzpicture}
+		%\includegraphics[scale=0.5]{example-image-duck}
+%		\caption{\(t = \epsilon\phi\) is not achronal but can be spacelike.}
+	\end{figure}
+	\column{0.57\textwidth}
+	%todo: spostare piu' in su il blocco e decidere che tipo di blocco usare davvero
+	\begin{ideablock}{Attention}
+		\centering
+		Spacelike \(\nRightarrow\) Achronal
+	\end{ideablock}
+ 	\vskip -10pt
+	\begin{figure}
+		\caption{\(t = \epsilon\phi\) is not achronal but can be spacelike.}
+	\end{figure}
+	\end{columns}
+
+	\end{frame}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 3
+	\begin{frame}[fragile]
+		\frametitle{Globally Hyperbolic Spaces}
+		\begin{theoblock}{}
+			
+			\begin{columns}
+				\column{0.4\textwidth}
+				\centering
+				\(p,q\in S\) spacelike, achronal \& codim\(S= 1\)
+				\column{0.6\textwidth}
+				\begin{columns}
+					\column{0.05\textwidth} \centering \vfill \(\implies\)
+					\column{0.55\textwidth}
+					\centering
+					there is no \emph{causal} path from \(p\) to \(q\).
+				\end{columns}
+			\end{columns}
+		\end{theoblock}
+	
+	\begin{defblock}{Cauchy Hypersurface}
+		\(S\) is a \emph{Cauchy} hypersurface if it is \emph{achronal}, \emph{spacelike} \& if 
+		\(\forall p \notin S\) any inextendible \emph{causal} path through \(p\) intersects \(S\).
+	\end{defblock}
+		\pause
+		
+	\begin{columns}
+		\column{0.6\textwidth}
+		\centering
+		%\includegraphics[scale=0.7]{example-image-duck}
+		\begin{tikzpicture}[x={(1.5,0)},y={(0,1.5)},z={(.5,.5)},
+		pics/geodesic/.style n args={3}{code={
+				% #1 = draw options
+				% #2 = first path
+				% #3 = second path
+				\draw[path fading=north,#1,postaction={decorate,decoration={markings,mark=at position .75 with {\arrowreversed{stealth}}}}] #2 coordinate (continue) pic[pics/code={\fill circle(0.7pt);}]{};
+				\path[name path=geodesic] #3;
+				\begin{scope}[on background layer={}]
+				\draw[#1,dash pattern=on .9pt off .9pt,intersection segments={of=geodesic and lower boundary,sequence={L1}}];
+				\draw[path fading=south,#1,intersection segments={of=geodesic and lower boundary,sequence={L2}}];
+				\end{scope}
+		}}]
+		\colorlet{surfacecol}{orange}
+		\coordinate (a) (0,0,0);
+		\coordinate (b) at (2,-.3,0);
+		\coordinate (c) at (2,0,2);
+		\coordinate (d) at (0,0,2);
+		\tikzmath{
+			\outb0=140;\inb0=5;\oute0=210;\ine0=30;
+			\outb1=50;\inb1=-100;\oute1=80;\ine1=-120;
+		}
+		\foreach \p/\q/\i/\n in {b/a/0/b,c/d/0/e,b/c/1/b,a/d/1/e} {
+			\path[decorate,decoration={markings,mark=between positions 0 and 1 step 0.0999 with {\tikzmath{\j=int(\pgfkeysvalueof{/pgf/decoration/mark info/sequence number}-1);}\coordinate (p-\i-\j-\n);}}]
+			(\p) to[out=\csname out\n\endcsname\i,in=\csname in\n\endcsname\i] (\q);
+		}
+		\fill[surfacecol!20,opacity=.5] (b) to[out=\outb0,in=\inb0] (a) to[out=\oute1,in=\ine1] (d) to[out=\ine0,in=\oute0] (c) to[out=\inb1,in=\outb1] (b);
+		\foreach \pb/\qb/\pe/\qe/\i/\j in {b/c/a/d/1/0,b/a/c/d/0/1} {
+			\foreach \tt[evaluate=\tt as \t using 0.0999*\tt] in {1,...,10} {
+				\tikzmath{
+					\myout={\outb{\i}*(1-\t)+\oute{\i}*\t};
+					\myin={\inb{\i}*(1-\t)+\ine{\i}*\t};
+					\myop=0.5;
+					\mylw=0.35;
+					if \tt==10 then {
+						\myop=1;\mylw=0.6;
+					};
+				}
+				\draw[surfacecol,opacity=\myop,line width=\mylw] (p-\j-\tt-b) to[out=\myout,in=\myin] (p-\j-\tt-e);
+		}}
+		\draw[surfacecol,line width=1.2,name path=lower boundary] (a) to[out=\inb0,in=\outb0] (b) to[out=\outb1,in=\inb1] (c);
+		\tikzset{
+			geodesic style/.style={green!80!black,line width=.6}
+		}
+		\pic{geodesic={geodesic style}{(.2,1.3,.2) to[out=-70,in=110] (.2,.1,.2)}{(continue) to[out=-70,in=90] (.3,-.8,.3)}};
+		\pic{geodesic={geodesic style}{(.9,1.3,1) to[out=-80,in=100] (.8,.1,1)}{(continue) to[out=-80,in=80] (.8,-.8,1)}};
+		\pic{geodesic={geodesic style}{(1.8,1.3,.3) to[out=-80,in=60] (1.8,-.1,.3)}{(continue) to[out=-120,in=80] (1.6,-.8,.3)}};
+		\pic{geodesic={geodesic style}{(1.8,1.3,1.5) to[out=-90,in=120] (1.7,-.2,1.8)}{(continue) to[out=-60,in=90] (1.9,-.8,1.9)}};
+		\pic{geodesic={geodesic style}{(1.4,1.5,1) to[out=-90,in=108] (1.17,.1,1.5)}{(continue) to[out=-72,in=110] (1.95,-.8,.74)}};
+		\pic{geodesic={geodesic style}{(.7,1.5,.5) to[out=-45,in=110] (.5,.3,.9)}{(continue) to[out=-70,in=90] (.8,-.7,.3)}};
+		\pic{geodesic={geodesic style}{(1.5,1.7,.2) to[out=-70,in=110] (.8,.1,.2)}{(continue) to[out=-70,in=90] (.5,-.8,.3)}};
+		
+		\node[left] at (a) {\footnotesize\(S\)};
+		\end{tikzpicture}
+		
+
+	\column{0.4\textwidth}
+	\begin{defblock}{Globally Hyperbolic Space}
+		\(M\) is said to be \emph{Globally Hyperbolic} if it contains a Cauchy hypersurface \(S\).
+	\end{defblock}
+	\end{columns}
+		
+	\end{frame}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 4
+
+	\begin{frame}
+		\begin{columns}
+			\column{0.6\textwidth}
+			\begin{defblock}{Weak causality}
+				There is no nonconstant causal curve from a point \(q\in M\) to iself
+			\end{defblock}
+		\pause
+		\centering{\LARGE\(\Uparrow\)}
+		\begin{defblock}{Strong causality}
+			Every point \(q\in M\) has an arbitrarily small neighborhood V such that any causal curve between points \(p,p'\in V\) is entirely contained in \(V\). 
+		\end{defblock}
+	
+		{\huge\(\Uparrow\)}
+		\begin{theoblock}{}
+			\centering
+			Global Hyperbolicity
+		\end{theoblock}
+		\column{0.4\textwidth}
+		\begin{figure}
+			%\includegraphics[scale=0.7]{example-image-duck}
+			\begin{tikzpicture}[scale=0.9]
+				\coordinate (a) at (0,0);
+				\coordinate (b) at (2,2);
+				\coordinate (c) at (0,4);
+				\coordinate (d) at (-2, 2);
+				\coordinate (q) at (0, 1.5);
+				\draw[thick, definition] (a) to [out = 70, in = -160, looseness = 1] (b);
+				\draw[thick, definition] (b) to [out = 160, in = -70, looseness = 1] (c);
+%				\draw[thick, definition] (d) to [out = 20, in = -110, looseness = 0.5] (c);
+%				\draw[thick, definition] (d) to [out = -20, in = 110, looseness = 0.5] (a);
+				
+				\colorlet{surfacecol}{definition}
+				
+				
+				\tikzmath{
+					\outb0=-160;\inb0=70;\oute0=-110;\ine0=20;
+					\outb1=160;\inb1=-70;\oute1=130;\ine1=-20;
+				}
+				\foreach \p/\q/\i/\n in {b/a/0/b,c/d/0/e,b/c/1/b,a/d/1/e} {
+					\path[decorate,decoration={markings,mark=between positions 0 and 1 step 0.0999 with {\tikzmath{\j=int(\pgfkeysvalueof{/pgf/decoration/mark info/sequence number}-1);}\coordinate (p-\i-\j-\n);}}]
+					(\p) to[out=\csname out\n\endcsname\i,in=\csname in\n\endcsname\i] (\q);
+				}
+				\fill[surfacecol!20,opacity=.5] (b) to[out=\outb0,in=\inb0] (a) to[out=\oute1,in=\ine1] (d) to[out=\ine0,in=\oute0] (c) to[out=\inb1,in=\outb1] (b);
+				\foreach \pb/\qb/\pe/\qe/\i/\j in {b/c/a/d/1/0,b/a/c/d/0/1} {
+					\foreach \tt[evaluate=\tt as \t using 0.0999*\tt] in {1,...,10} {
+						\tikzmath{
+							\myout={\outb{\i}*(1-\t)+\oute{\i}*\t};
+							\myin={\inb{\i}*(1-\t)+\ine{\i}*\t};
+							\myop=0.5;
+							\mylw=0.35;
+							if \tt== 10 then {
+								\myop=1;\mylw=0.6;
+							};
+						}
+						\draw[surfacecol,opacity=\myop,line width=\mylw] (p-\j-\tt-b) to[out=\myout,in=\myin] (p-\j-\tt-e);
+				}}
+				
+				\draw[thick, titleorange, postaction={decorate,decoration={markings,mark=at position .25 with {\arrow{stealth}}}}] (0, 3) circle (1.5);
+				\fill[definition] (q) circle(1.1pt);
+				\node[below] at (q) {\(q\)};
+				\node[below] at (a) {\(V\)};
+				
+			\end{tikzpicture}
+			\caption{Strong causality implies weak causality.}
+		\end{figure}
+		%todo: disegna l'intorno V di q con una curva rossa chiusa che esce, per far capire che strong => weak
+		\end{columns}
+	\end{frame}	
+	
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 5
+	\section{Hawking's singularity theorem}
+	
+	\subsection{The Riemannian Case}
+	\begin{frame}
+	
+	\frametitle[Slide1]{The Riemannian Case}
+
+	\begin{ideablock}{Key-question}
+		Is a geodesic always the shortest distance between two points?
+	\end{ideablock}
+
+	\pause
+	
+	\begin{columns}
+		\column{0.4\textwidth}
+		\begin{defblock}{Focal Point}
+			If a geodesic segment \(qq'\) can be displaced - at least in first order - to a nearby geodesic from \(q\) to \(q'\), then \(q'\) is said to be a \emph{focal} point. 
+		\end{defblock}
+		\column{0.6\textwidth}
+		\begin{figure}
+			\begin{tikzpicture}[scale = 1.5]
+			\coordinate(q1) at(0,0);
+			\coordinate(q) at(-2,1);
+			\coordinate(p) at(2,0);
+			\foreach \i in {p,q,q1} {\fill[black] (\i) circle(.8pt);}
+			\draw[green] (p) -- (q);
+			\draw[titleorange] (q1) -- (q);
+			\draw[definition] (p) -- (q1) to [out = 180, in = -45] (q);
+			\node[below] at(q1) {\(q'\)};
+			\node[left] at(q)  {\(q\)};
+			\node[below] at(p) {\(p\)};
+			
+			\end{tikzpicture}
+			%	\includegraphics[scale=1.0]{example-image-duck}
+			\caption{a geodesic emanating from \(q\) is no longer length minimizing once it is continued past its focal point.}
+		\end{figure}
+		
+	\end{columns}
+	
+		\end{frame}
+%todo: ricordarsi di dire le cose in questo elenco puntato	
+%	%Slide 2
+%	\begin{frame}
+%	
+%
+%	\pause
+%	
+%	\begin{theoblock}{}
+%		We should conclude that a lenght minimizing geodesic mustn't have any focal point.
+%	\end{theoblock}
+%	
+%	\pause
+%	
+%	\begin{itemize}
+%		\item<2-> This is a necessary but not sufficient condition.
+%		\item<3-> The definition can be extended to geodesics connecting point \(q\) to a submanifold \(W\). 
+%		
+%		Now a point \(q'\) is said to be \emph{focal} if there exist points \(p,p'\in W\) such that:
+%		\begin{enumerate}
+%			\item \(qq'p\) and \(qq'p'\) are both geodesics.
+%			\item \(qq'p\) and \(qq'p'\) are both orthogonal to W.
+%		\end{enumerate}
+%	\end{itemize}
+%	
+%
+%	\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 5
+	\subsection{The Lorentz SIgnature Analog}
+	\begin{frame}
+		\frametitle[Slide3]{The Lorentz Signature Analog}
+		\begin{ideablock}{Key-Idea}
+			In timelike objects distance is replaced by the elapsed proper time.
+		\end{ideablock}
+	\pause
+	
+	\vskip 7pt
+	\parallelcontent{\textcolor{titleorange}{\textbf{Riemannian Signature}}}{\textcolor{titleorange}{\textbf{Lorentz Signature}}}
+	\parallelitem{locally minimizing distance.}{locally maximizing proper time s.}
+	\parallelitem{\(q'\) is focal if there are \(2\) nearby geodesic segments \(qq'\)}{\(q'\) is focal if there are \(2\) nearby \emph{timelike} geodesic segments \(qq'\)}
+	\end{frame}
+%	%Slide4
+%	\begin{frame}
+%	
+%	\begin{center}
+%		A curve \(\gamma\) is extremizing if
+%	\end{center}
+%	\pause
+%	\vskip 7pt
+%	\parallelcontent{\textcolor{titleorange}{\textbf{Riemannian Signature}}}{\textcolor{titleorange}{\textbf{Lorentz Signature}}}
+%	\parallelitem{\(\gamma\) is a geodesic;}{\(\gamma\) is a \emph{timelike} geodesic;}
+%	\parallelitem{\(\gamma\) is orthogonal;}{\(\gamma\) is orthogonal;}
+%	\parallelitem{\(\gamma\) doesn't contain any focal point.}{\(\gamma\) doesn't contain any focal point.}
+%	\end{frame}
+%
+%	\subsection{Raychaudhuri's equation}
+%	%Slide4
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 6
+	\begin{frame}[fragile]
+		\frametitle{Coordinate extension}
+		\begin{columns}
+			\column{0.4\textwidth}
+			\centering
+			\begin{tikzpicture}[x={(1.5,0)},y={(0,1.5)},z={(.5,.5)},
+			pics/geodesic/.style n args={3}{code={
+					% #1 = draw options
+					% #2 = first path
+					% #3 = second path
+					\draw[path fading=north,#1,postaction={decorate,decoration={markings,mark=at position .75 with {\arrowreversed{stealth}}}}] #2 coordinate (continue) pic[pics/code={\fill circle(0.7pt);}]{};
+					\path[name path=geodesic] #3;
+					\begin{scope}[on background layer={}]
+					\draw[#1,dash pattern=on .9pt off .9pt,intersection segments={of=geodesic and lower boundary,sequence={L1}}];
+					\draw[path fading=south,#1,intersection segments={of=geodesic and lower boundary,sequence={L2}}];
+					\end{scope}
+			}}]
+			\colorlet{surfacecol}{orange}
+			\coordinate (a) (0,0,0);
+			\coordinate (b) at (2,-.3,0);
+			\coordinate (c) at (2,0,2);
+			\coordinate (d) at (0,0,2);
+			\tikzmath{
+				\outb0=140;\inb0=5;\oute0=210;\ine0=30;
+				\outb1=50;\inb1=-100;\oute1=80;\ine1=-120;
+			}
+			\foreach \p/\q/\i/\n in {b/a/0/b,c/d/0/e,b/c/1/b,a/d/1/e} {
+				\path[decorate,decoration={markings,mark=between positions 0 and 1 step 0.0999 with {\tikzmath{\j=int(\pgfkeysvalueof{/pgf/decoration/mark info/sequence number}-1);}\coordinate (p-\i-\j-\n);}}]
+				(\p) to[out=\csname out\n\endcsname\i,in=\csname in\n\endcsname\i] (\q);
+			}
+			\fill[surfacecol!20,opacity=.5] (b) to[out=\outb0,in=\inb0] (a) to[out=\oute1,in=\ine1] (d) to[out=\ine0,in=\oute0] (c) to[out=\inb1,in=\outb1] (b);
+			\foreach \pb/\qb/\pe/\qe/\i/\j in {b/c/a/d/1/0,b/a/c/d/0/1} {
+				\foreach \tt[evaluate=\tt as \t using 0.0999*\tt] in {1,...,10} {
+					\tikzmath{
+						\myout={\outb{\i}*(1-\t)+\oute{\i}*\t};
+						\myin={\inb{\i}*(1-\t)+\ine{\i}*\t};
+						\myop=0.5;
+						\mylw=0.35;
+						if \tt==10 then {
+							\myop=1;\mylw=0.6;
+						};
+					}
+					\draw[surfacecol,opacity=\myop,line width=\mylw] (p-\j-\tt-b) to[out=\myout,in=\myin] (p-\j-\tt-e);
+			}}
+			\draw[surfacecol,line width=1.2,name path=lower boundary] (a) to[out=\inb0,in=\outb0] (b) to[out=\outb1,in=\inb1] (c);
+			\tikzset{
+				geodesic style/.style={green!80!black,line width=.6}
+			}
+			\pic{geodesic={geodesic style}{(.2,1.3,.2) to[out=-70,in=110] (.2,.1,.2)}{(continue) to[out=-70,in=90] (.3,-.8,.3)}};
+			\pic{geodesic={geodesic style}{(.9,1.3,1) to[out=-80,in=100] (.8,.1,1)}{(continue) to[out=-80,in=80] (.8,-.8,1)}};
+			\pic{geodesic={geodesic style}{(1.8,1.3,.3) to[out=-80,in=60] (1.8,-.1,.3)}{(continue) to[out=-120,in=80] (1.6,-.8,.3)}};
+			\pic{geodesic={geodesic style}{(1.8,1.3,1.5) to[out=-90,in=120] (1.7,-.2,1.8)}{(continue) to[out=-60,in=90] (1.9,-.8,1.9)}};
+			\pic{geodesic={geodesic style}{(1.4,1.5,1) to[out=-90,in=108] (1.17,.1,1.5)}{(continue) to[out=-72,in=110] (1.95,-.8,.74)}};
+			\pic{geodesic={geodesic style}{(.7,1.5,.5) to[out=-45,in=110] (.5,.3,.9)}{(continue) to[out=-70,in=90] (.8,-.7,.3)}};
+			\pic{geodesic={geodesic style}{(1.5,1.7,.2) to[out=-70,in=110] (.8,.1,.2)}{(continue) to[out=-70,in=90] (.5,-.8,.3)}};
+			
+			\node[left] at (a) {\footnotesize\(S\)};
+			\end{tikzpicture}
+			%\includegraphics[width=\linewidth]{example-image-duck}
+			\column{0.6\textwidth}
+			Given a spacelike hypersurface \(S\) we can extend its local set of coordinates:
+			\vfill
+			\begin{center}
+				\begin{tikzcd}[column sep = tiny]
+					\dim S=d\rar&\vec{x}=(x_1,\ldots,x_d)\dar[dashed]\\
+					\dim M=d+1\rar\uar&(t,\vec{x})
+				\end{tikzcd}
+			\end{center}
+%			\begin{align*}
+%				\dim S =d \longrightarrow &\vec{x} = (x_1, \ldots, x_d)\\
+%				 \uparrow \quad \quad& \quad\downarrow \\
+%				 \dim M = d+1 \longrightarrow & (t, \vec{x}).
+%			\end{align*}
+		\end{columns}
+	\vskip 11pt
+	\pause
+	\begin{theoblock}{Consequence}
+		\centering \(ds^2 = -dt^2 + g_{ij}(t,\vec{x})dx^idx^j\).
+	\end{theoblock}
+	
+	\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 7
+	\begin{frame}
+		\frametitle{Raychaudhuri's Equation}
+		\begin{ideablock}{Einstein equation}
+		\centering	\(R_{tt} = 8\pi G \underbrace{\left(T_{tt} - \frac{1}{D - 2}g_{tt}T_{\alpha}^{\alpha}\right) }_{\hat{T}_{tt}}\).
+		\end{ideablock}
+
+	\pause
+	\[
+	\begin{rcases}
+	V := \sqrt{\det g}\\
+	\theta := \frac{\dot{V}}{V} = \frac{1}{2} \Tr[g^{-1}\dot{g}]\\
+	\sigma^i_j := \frac{1}{2}\left(g^{ik}\dot{g}_{kj} - \frac{1}{d}\delta^i_j\Tr[g^{-1}\dot{g}]\right)
+	\end{rcases}
+	\implies
+	\]
+	
+	\begin{theoblock}{Raychaudhuri's equation}
+		 \centering \(\partial_t\left(\frac{\dot{V}}{V}\right) + \frac{1}{d}\left(\frac{\dot{V}}{V}\right)^2 =-\Tr[\sigma^2] - 8\pi G\hat{T}_{tt}.\)
+	\end{theoblock}
+
+	\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 8
+	\begin{frame}[fragile]
+	\frametitle{Two Consequences}
+	\begin{defblock}{Strong energy condition}
+		\centering	\(\hat{T}_{tt}\ge 0 \implies \partial_t\left(\frac{1}{\theta}\right)\ge \frac{1}{d}\)
+	\end{defblock}
+
+	\begin{ideablock}{Attention}
+		The strong energy condition is \emph{not} satisfied by a positive cosmological constant! 
+	\end{ideablock}
+	
+	\vskip 17pt
+	\pause
+	\begin{columns}
+		\column{0.7\textwidth}
+		If \(\exists p \in S\) such that \(\theta = - w < 0\) then
+		\begin{defblock}{}
+			\centering	\(\frac{\dot{V}}{V} \le -\left(\frac{1}{w} - \frac{t}{d}\right)^{-1}\implies V(t)\rightarrow 0  \) if \(t \rightarrow \frac{d}{w}\)
+		\end{defblock}
+		\column{0.3\textwidth}
+		\begin{tikzpicture}[x={(1.0,0)},y={(0,1.0)},z={(.5,.5)},
+		pics/geodesic/.style n args={3}{code={
+				% #1 = draw options
+				% #2 = first path
+				% #3 = second path
+				\draw[path fading=north,#1,postaction={decorate,decoration={markings,mark=at position .75 with {\arrowreversed{stealth}}}}] #2 coordinate (continue) pic[pics/code={\fill circle(0.7pt);}]{};
+				\path[name path=geodesic] #3;
+				\begin{scope}[on background layer={}]
+				\draw[#1,dash pattern=on .9pt off .9pt,intersection segments={of=geodesic and lower boundary,sequence={L1}}];
+				\draw[path fading=south,#1,intersection segments={of=geodesic and lower boundary,sequence={L2}}];
+				\end{scope}
+		}}]
+		\colorlet{surfacecol}{orange}
+		\coordinate (a) (0,0,0);
+		\coordinate (b) at (2,-.3,0);
+		\coordinate (c) at (2,0,2);
+		\coordinate (d) at (0,0,2);
+		\tikzmath{
+			\outb0=140;\inb0=5;\oute0=210;\ine0=30;
+			\outb1=50;\inb1=-100;\oute1=80;\ine1=-120;
+		}
+		\foreach \p/\q/\i/\n in {b/a/0/b,c/d/0/e,b/c/1/b,a/d/1/e} {
+			\path[decorate,decoration={markings,mark=between positions 0 and 1 step 0.0999 with {\tikzmath{\j=int(\pgfkeysvalueof{/pgf/decoration/mark info/sequence number}-1);}\coordinate (p-\i-\j-\n);}}]
+			(\p) to[out=\csname out\n\endcsname\i,in=\csname in\n\endcsname\i] (\q);
+		}
+		\fill[surfacecol!20,opacity=.5] (b) to[out=\outb0,in=\inb0] (a) to[out=\oute1,in=\ine1] (d) to[out=\ine0,in=\oute0] (c) to[out=\inb1,in=\outb1] (b);
+		\foreach \pb/\qb/\pe/\qe/\i/\j in {b/c/a/d/1/0,b/a/c/d/0/1} {
+			\foreach \tt[evaluate=\tt as \t using 0.0999*\tt] in {1,...,10} {
+				\tikzmath{
+					\myout={\outb{\i}*(1-\t)+\oute{\i}*\t};
+					\myin={\inb{\i}*(1-\t)+\ine{\i}*\t};
+					\myop=0.5;
+					\mylw=0.35;
+					if \tt==10 then {
+						\myop=1;\mylw=0.6;
+					};
+				}
+				\draw[surfacecol,opacity=\myop,line width=\mylw] (p-\j-\tt-b) to[out=\myout,in=\myin] (p-\j-\tt-e);
+		}}
+		\draw[surfacecol,line width=1.2,name path=lower boundary] (a) to[out=\inb0,in=\outb0] (b) to[out=\outb1,in=\inb1] (c);
+		\tikzset{
+			geodesic style/.style={green!80!black,line width=.6}
+		}
+%		\pic{geodesic={geodesic style}{(.2,1.3,.2) to[out=-70,in=110] (.2,.1,.2)}{(continue) to[out=-70,in=90] (.3,-.8,.3)}};
+%		\pic{geodesic={geodesic style}{(.9,1.3,1) to[out=-80,in=100] (.8,.1,1)}{(continue) to[out=-80,in=80] (.8,-.8,1)}};
+		\pic{geodesic={geodesic style}{(1.4,1.4,.4) to[out=-80,in=60] (1.8,-.1,.3)}{(continue) to[out=-120,in=80] (1.6,-.8,.3)}};
+%		\pic{geodesic={geodesic style}{(1.8,1.3,1.5) to[out=-90,in=120] (1.7,-.2,1.8)}{(continue) to[out=-60,in=90] (1.9,-.8,1.9)}};
+%		\pic{geodesic={geodesic style}{(1.4,1.5,1) to[out=-90,in=108] (1.17,.1,1.5)}{(continue) to[out=-72,in=110] (1.95,-.8,.74)}};
+		\pic{geodesic={geodesic style}{(1.4,1.4,.4) to[out=-45,in=110] (.7,.1,.9)}{(continue) to[out=-70,in=90] (.8,-.7,.3)}};
+%		\pic{geodesic={geodesic style}{(1.5,1.7,.2) to[out=-70,in=110] (.8,.1,.2)}{(continue) to[out=-70,in=90] (.5,-.8,.3)}};
+
+		\node[left] at (d) {\footnotesize\(S\)};
+		\end{tikzpicture}
+	\end{columns}
+	 
+	\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Slide 9
+	\subsection{Hawking's theorem}
+
+	\begin{frame}
+		\frametitle{Hawking's theorem}
+		\begin{itemize}
+			\item M is smooth and time-oriented;
+			\item M is Globally Hyperbolic;	\tikzmark{top 1}
+			\item S is a Cauchy Hypersurface;\tikzmark{bottom 1}\tikzmark{top 2}
+			\item \(\forall p \in S \quad \quad \frac{\dot{V}}{V}\ge dh_{\text{min}} \).\tikzmark{bottom 2}
+		\end{itemize}
+	
+	\VerticalBrace[ultra thick, titleorange]{top 1}{bottom 1}{\(\gamma\) geodesic maximizing \(s\implies\)\\\(\perp\) S and without focal points.}
+	%{\textcolor{titleorange}{\(\gamma\) geodesics maximizing \(s\implies\)\\\(\perp\) S and without focal points.}}
+	\VerticalBrace[ultra thick, idea]{top 2}{bottom 2}{\newline \\ \newline \\Every \(\gamma\) has a focal point.}
+	%{\textcolor{idea}{Every \(\gamma\) has a focal point.}}
+
+	
+	\begin{theoblock}{Hawking's Singularity Theorem}
+		\(\nexists p \in M\) to the past of S by a proper time greater than \(\frac{1}{h_{\text{min}}}\).
+		
+		Equivalently, \(M\) is \emph{timelike} geodesically incomplete.
+	\end{theoblock}
+		
+
+	\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 10
+\section{The null analog}
+\begin{frame}
+	\frametitle{The null analog}
+	\begin{columns}
+		\column{0.7\textwidth}
+		\begin{defblock}{Promptness}
+			A causal path \(\ell\) from \(q\) to \(p\) is \emph{prompt} if there is no causal path \(\ell'\) from \(q\) to a point \(r\) just to the past of \(p\).
+		\end{defblock}
+		\column{0.3\textwidth}
+		\begin{tikzpicture}
+			\coordinate (q) at (0, 0);
+			\coordinate (p) at (2, 2);
+			\coordinate (r) at (2, 1); 
+			\draw[theorem, postaction={decorate,decoration={markings,mark=at position .5 with {\arrow{stealth}}}}] (q) -- (p);
+			\draw[titleorange, dashed, postaction={decorate,decoration={markings,mark=at position .5 with {\arrow{stealth}}}}] (q) -- (r);
+			\draw[titleorange, postaction={decorate,decoration={markings,mark=at position .5 with {\arrow{stealth}}}}] (r) -- (p);
+			\foreach \i in {p,q,r} {\fill[definition] (\i) circle(.8pt);}
+			\node[below] at (q) {\(q\)};
+			\node[below] at (r) {\(r\)};
+			\node[above] at (p) {\(p\)};
+		\end{tikzpicture}
+	\end{columns}
+	\pause
+	
+	\begin{enumerate}
+		\item \(\ell\) prompt \(\implies\) \(\ell\) is an orthogonal null geodesic, with no focal points.
+		\item Strong causality \(\implies\) any null geodesics has a prompt initial segment.
+	\end{enumerate}
+	\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 11
+	\begin{frame}
+	\begin{theoblock}{Null Raychaudhuri equation}
+		Extending coordinates from a spacelike submanifold \(W\) of codimension \(2\) we get:
+		\[\dot{\theta} + \frac{\theta^2}{D-2} = -\Tr[\sigma^2] - 8\pi GT_{uu}\]
+	\end{theoblock}
+	\pause
+	\begin{defblock}{Null energy condition}
+		For any null vector \(v^{\mu}\)
+		\[v^{\mu}v^{\nu}T_{\mu\nu} \ge 0\]
+	\end{defblock}
+	\pause
+	\begin{defblock}{Trapped Surfaces}
+		A \emph{trapped surface} is a codimension \(2\), spacelike, submanifold \(W\) such that the expansion of each family of orthogonal future-going null geodesics is everywhere negative.
+	\end{defblock}
+	\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 13
+\subsection{Penrose's Theorem}
+\begin{frame}
+	\frametitle{Penrose's SingularityTheorem}
+	\begin{theoblock}{Penrose's theorem}
+		\begin{columns}
+			\column{0.45\textwidth}
+			\begin{itemize}
+				\item M is globally hyperbolic
+				\item M has a non-compact Cauchy hypersurface
+				\item The Classical Einstein equations hold
+				\item Null Energy condition holds
+				\item Exists a compact trapped surface
+			\end{itemize}
+		\column{0.55\textwidth}
+			\begin{columns}
+				\column{0.05\textwidth}
+				{\Large\(\implies\)}
+				\column{0.5\textwidth}
+				M is not \emph{null geodesically} complete.
+		\end{columns}
+		\end{columns}
+	\end{theoblock}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 10
+\begin{frame}[fragile]
+	\begin{columns}
+		\column{0.5\textwidth}
+		\centering
+		%\includegraphics[scale=0.7]{example-image-duck}
+		%todo: mettici disegno tipo fig.32 pag. 49, magari con sotto una superficie S nello stile di fig.8 a pag.17
+		\begin{tikzpicture}[x={(1,0)},y={(0,1)},z={(.5,.5)},
+		pics/geodesic/.style n args={3}{code={
+				% #1 = draw options
+				% #2 = first path
+				% #3 = second path
+				\draw[path fading=north,#1,postaction={decorate,decoration={markings,mark=at position .75 with {\arrowreversed{stealth}}}}] #2 coordinate (continue) pic[pics/code={\fill circle(0.7pt);}]{};
+				\path[name path=geodesic] #3;
+				\begin{scope}[on background layer={}]
+				\draw[#1,dash pattern=on .9pt off .9pt,intersection segments={of=geodesic and lower boundary,sequence={L1}}];
+				\draw[path fading=south,#1,intersection segments={of=geodesic and lower boundary,sequence={L2}}];
+				\end{scope}
+		}}]
+		\colorlet{surfacecol}{orange}
+		\coordinate (a) (0,0,0);
+		\coordinate (b) at (2,-.3,0);
+		\coordinate (c) at (2,0,2);
+		\coordinate (d) at (0,0,2);
+		\tikzmath{
+			\outb0=140;\inb0=5;\oute0=210;\ine0=30;
+			\outb1=50;\inb1=-100;\oute1=80;\ine1=-120;
+		}
+		\foreach \p/\q/\i/\n in {b/a/0/b,c/d/0/e,b/c/1/b,a/d/1/e} {
+			\path[decorate,decoration={markings,mark=between positions 0 and 1 step 0.0999 with {\tikzmath{\j=int(\pgfkeysvalueof{/pgf/decoration/mark info/sequence number}-1);}\coordinate (p-\i-\j-\n);}}]
+			(\p) to[out=\csname out\n\endcsname\i,in=\csname in\n\endcsname\i] (\q);
+		}
+		\fill[surfacecol!20,opacity=.5] (b) to[out=\outb0,in=\inb0] (a) to[out=\oute1,in=\ine1] (d) to[out=\ine0,in=\oute0] (c) to[out=\inb1,in=\outb1] (b);
+		\foreach \pb/\qb/\pe/\qe/\i/\j in {b/c/a/d/1/0,b/a/c/d/0/1} {
+			\foreach \tt[evaluate=\tt as \t using 0.0999*\tt] in {1,...,10} {
+				\tikzmath{
+					\myout={\outb{\i}*(1-\t)+\oute{\i}*\t};
+					\myin={\inb{\i}*(1-\t)+\ine{\i}*\t};
+					\myop=0.5;
+					\mylw=0.35;
+					if \tt==10 then {
+						\myop=1;\mylw=0.6;
+					};
+				}
+				\draw[surfacecol,opacity=\myop,line width=\mylw] (p-\j-\tt-b) to[out=\myout,in=\myin] (p-\j-\tt-e);
+		}}
+		\draw[surfacecol,line width=1.2,name path=lower boundary] (a) to[out=\inb0,in=\outb0] (b) to[out=\outb1,in=\inb1] (c);
+		\tikzset{
+			geodesic style/.style={green!80!black,line width=.6}
+		}
+		
+		\draw[thick, definition, dashed] (1.3,1.7,-.3) arc (180:0:.7 and .3);
+		\draw[thick, definition] (1.3,1.7,-.3) arc (180:360:.7 and .3);
+		\draw[thick, definition, dashed] (.33,3.27,-.3) arc (190:-10:1.7 and .7);
+		\draw[thick, definition] (.33,3.27,-.3) arc (190:350:1.7 and .7);
+		%\draw[thick, definition] (2,1.7,-.3) circle (.7 and .3);
+%		\draw[thick, definition] (2,3.4,-.3) circle (1.7 and .7);
+		\draw[thick, definition, dashed] (2,2.4,-.3) circle (.35 and .15);
+		\draw[thick, definition] (1.3,1.7,-.3) -- (1.65, 2.4, -.3);
+		\draw[thick, definition] (2.7,1.7,-.3) -- (2.35, 2.4, -.3);
+		\draw[thick, definition] (1.3,1.7,-.3) -- (.37, 3.2, -.3) node[left] {\footnotesize\(\partial J^+(W)\)};
+		\draw[thick, definition] (2.7,1.7,-.3) node[right] {\footnotesize\(W\)} -- (3.63, 3.2, -.3);
+		
+		\node[left] at (a) {\footnotesize\(S\)};
+		
+		
+		\end{tikzpicture}
+		\column{0.5\textwidth}
+		\centering
+		\(\frac{\dot{A}}{A}<-w\implies \lambda\ge \frac{D-2}{w}\) past a focal point \(p\).\\
+		\(\overrightwitchonpitchfork*{\text{\tiny Reductio ad Absurdum}}\) \\ %\(\mathwitch*\) \\ %Reductio ad Absurdum
+		\(\ell \cap \partial J^+(W)\) is compact.\\
+		\(\pumpkin\Downarrow\pumpkin\) \\ 
+		\(\partial J^+(W)\) is compact.\\
+		\(\mathghost\Downarrow\mathghost\) \\ 
+		Absurd as the Cauchy hypersurface S is non-compact.
+	\end{columns}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{ideablock}{\textcolor{black}{\(\pumpkin\) Fact \( 1 \) \(\pumpkin\)}}
+			Any point \(p\in\partial J^+(W)\) is connected to \(W\) by a future-going orthogonal null geodesic.
+		\end{ideablock}
+	\column{0.5\textwidth}
+	\begin{theoblock}{\(\mathghost\) Fact \( 2\) \( \mathghost\)}
+		\(\varphi :M\hookrightarrow N\) embedding, \(M\) compact \& \(N\) connected with the same dimension implies that \(\varphi\) is a diffeomorphism, and in particular \(N\) is compact.
+	\end{theoblock}
+	\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 11
+
+\begin{frame}
+	\frametitle{De Sitter Space: a useful example}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{figure}
+			\begin{tikzpicture}[scale=0.9]
+			\coordinate (a) at (0,0);
+			\coordinate (b) at (5,0);
+			\coordinate (c) at (5,5);
+			\coordinate (d) at (0,5);
+			\coordinate (q) at (3,1);
+			\draw[thick, definition] (a) -- (b) -- (c) -- (d) -- (a);
+			\draw[thick,definition] (a) -- (c);
+			\draw[definition] (b) -- (d);
+			\fill[definition, opacity = 0.22] (a) -- (b) -- (c) -- (a);
+			\draw[definition] (0, 2.5) -- (5, 2.5);
+			\draw[thick, definition] (a) to [out = 18, in = 180, looseness = 0.5] (5,2);
+			\draw[thick, definition, dashed] (a) to [out = 9, in = 180, looseness = 0.5] (5,1);
+			\draw[thick, definition, dashed] (a) to [out = 27, in = 180, looseness = 0.5] (5,3);
+			\draw[thick, definition, dashed] (a) to [out = 36, in = 180, looseness = 0.5] (5,4);
+			\draw[thick, titleorange, dashed, postaction={decorate,decoration={markings,mark=at position .75 with {\arrow{stealth}}}}] (4,0) -- (0,4) node[midway, above] {\(\gamma\)};
+			
+			
+			\fill[definition] (q) circle(1.1pt);
+			\node[below] at (q) {\(q\)};
+			\node[left] at (0, 2.5) {\(\hat{M}\)};
+			\node[right] at (5, 2.5) {\(M\)};
+			\end{tikzpicture}
+			\caption{Penrose diagram of de Sitter space.}
+		\end{figure}
+		\column{0.5\textwidth}
+		\begin{defblock}{Metric of complete de Sitter space}
+			\(ds^2 = -dt^2 + R^2\cosh^2\left(\frac{t}{R}\right)d\Omega^2\)
+		\end{defblock}
+		\begin{defblock}{Metric of partial de Sitter space}
+			\(ds^2 = -dt^2 + R^2exp\left(-\frac{2t}{R}\right)d\vec{x}^2\)
+		\end{defblock}
+	\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 12
+
+\section{Black Holes: a physical application}
+\subsection{Cosmic Censorship}
+
+\begin{frame}
+		\frametitle{Weak Cosmic Censorship}
+		\begin{defblock}{Cosmic Censorship}
+			In any \emph{localized} process, in an asymptotically Minkowskian spacetime, the region in the far distance and to the far future continues to exist, just as in Minkowski space.
+			
+			The evolution seen by an outside observer is supposed to be predictable based on the classical Einstein equation.
+		\end{defblock}
+	\vfill
+	\pause
+	\begin{columns}
+			\column{0.5\textwidth}
+			\centering
+			%\includegraphics[scale=0.8]{example-image-duck}
+			%todo: mettici una figura tipo la 36 a pagina 62
+			\begin{tikzpicture}[scale=0.5]
+				\coordinate (a) at (3.7, -2);
+				\coordinate (b) at (5, 3);
+				\filldraw[definition] (0,0) ellipse (2 and 1);
+				\draw[thick, theorem] (a) to[out = 110, in = - 135] (b);
+				\draw[titleorange] (2,0) -- (b) node[midway, above] {\(\gamma\)};
+				
+				\node[right] at (a) {\footnotesize\(\mathcal{I}\)};
+				\node[below] at (0, -1) {\footnotesize\(W\)};
+				
+			
+				
+			\end{tikzpicture}
+			\column{0.5\textwidth}
+			\begin{defblock}{Black hole region}
+				\centering
+				\large
+				\(B \coloneqq M \setminus J^-(\mathcal{I})\)
+			\end{defblock}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 13
+\subsection{Black Holes}
+	\begin{frame}
+		\begin{theoblock}{Existence of Black Holes}
+			Any compact trapped surface \(W\) is in the black hole region \(B\).
+			
+			As a consequence, in any asymptotically flat spacetime that contains a trapped surface, a black hole forms.
+		\end{theoblock}
+		
+		%todo: qui ricordati che flat spacetime + global. hyper. ==> esiste Cauchy hypersurf. non compatta
+		\vfill
+		\pause
+		\begin{columns}
+			\column{0.6\textwidth}
+			\begin{itemize}
+				\item \(J^+(W\subseteq B) \subseteq B\);
+				\item Black holes cannot split.
+				\item The horizon generators are prompt null geodesics, everywhere contained in the horizon.
+			\end{itemize}
+			
+			\column{0.4\textwidth}		
+			%\includegraphics[scale=0.7]{example-image-duck}
+			%todo: qui ci vuole una figura tipo la 38 di pagina 63.
+			\begin{tikzpicture}[scale=0.5]
+				\coordinate (a) at (0,0);
+				\coordinate (b) at (7,0);
+				\coordinate (c) at (8,2);
+				\coordinate (d) at (1,2);
+				
+				\coordinate (e) at (0,5);
+				\coordinate (f) at (7,5);
+				\coordinate (g) at (8,7);
+				\coordinate (h) at (1,7);
+				
+				\draw (a) -- (b) -- (c) -- (d) -- (a);
+				\draw (e) -- (f) -- (g) -- (h) -- (e);
+				
+				\draw[thick, definition, dashed] (2.5,1) arc (180:0:1.5 and .5);
+				%\draw[thick, definition] (2.5,1) arc (180:360:1.5 and .5);
+				
+				%\draw[thick, definition] (2,6) ellipse (.7 and .3);
+				%\draw[thick, definition] (6,6) ellipse (.9 and .4);
+				\draw[thick, definition] (1.3, 6) arc (180:0:.7 and .3);
+				\draw[thick, definition] (5.1, 6) arc (180:0:.9 and .4);
+				\filldraw[thick, definition, fill opacity = .22] (2.5, 1) to[out = 90, in = -60] (1.3, 6) arc (180:360:.7 and .3) to[out = -80, in = -110, looseness = 3.0] (5.1, 6) arc (180:360:.9 and .4) to[out = -110, in = 90] (5.5, 1) arc (0:-180:1.5 and .5);
+				%\draw[thick, definition] (5.5, 1) to[out = 90, in = -110] (6.9, 6);
+				%\draw[thick, definition] (2.7, 6) to[out = -80, in = -110, looseness = 3.0] (5.1, 6);
+				
+				\node[right] at (b) {\(S\)};
+				\node[right] at (f) {\(S'\)};
+				\node[left] at (2.5, 1) {\(B\)};
+
+			\end{tikzpicture}
+		\end{columns}
+	\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Slide 14
+\subsection{Black Hole Area Theorem}
+\frametitle{Black Holes Area Theorem}
+\begin{frame}
+	\begin{theoblock}{Hawking area theorem}
+		The area of the black hole horizon can only increase. 
+		
+		%The theorem applys separately to each component of the black hole region. 
+		If two or more black holes merge, they produce a black hole whose horizon area is at least equal to the sum of the horizon areas of the original black holes.
+	\end{theoblock}
+
+	\pause
+\begin{columns}
+	\column{0.6\textwidth}
+	\centering
+	\(\overrightflutteringbat{\small\text{Reductio ad Absurdum}}\)\\
+	Define \(W'\) by pushing \(W\) out a little in the region where \(\theta < 0\).\\
+	\(\Downarrow\)\\
+	\(\ell\) prompt connects \(\mathcal{I}\) to a point of \(W'\) outside \(B\).\\
+	\(\Downarrow\)\\
+	Contradiction: \(\mathcal{I}\) is arbitrarily far away but \(\ell\) is prompt only for a bounded affine distance.
+	\column{0.4\textwidth}		
+	%\includegraphics[scale=0.7]{example-image-duck}
+	%todo: qui serve la figura 40 di pagina 66
+	
+	\begin{tikzpicture}[scale=0.7]
+		\draw[titleorange, thick, dashed] (30:2) to[out = -30, in= 30, looseness = 2] (-30:2);
+		
+		\fill[idea, opacity = 0.22] (30:2) to[out = -30, in= 30, looseness = 2] (-30:2) arc(-30:30:2);
+		\filldraw[thick, theorem, fill opacity = 0.22] (0,0) circle (2);
+		\node[above] at (0,2) {\(W\)};
+		\node[right] at (2.7,0) {\(W'\)};
+		
+		
+	\end{tikzpicture}
+	
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+	\centering
+	
+	{\Huge \textcolor{theorem}{Thank you for your attention!}}
+	\vskip 17pt
+	\nocite{*}
+	\textbf{Bibliography}
+	\printbibliography
+\end{frame}
+
+\end{document}
